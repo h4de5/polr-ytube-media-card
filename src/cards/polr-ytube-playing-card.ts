@@ -94,7 +94,7 @@ export class PoLRYTubePlayingCard extends LitElement {
                 </div>
                 <div class="content">
                     ${this._entity?.state != "off"
-                ? html`
+                        ? html`
                               <polr-media-control
                                   id="mediaControl"
                                   .hass=${this._hass}
@@ -104,13 +104,13 @@ export class PoLRYTubePlayingCard extends LitElement {
                               <polr-tab-bar
                                   activeIndex=${this._activeTab}
                                   @MDCTabBar:activated="${(ev) =>
-                        this._changeTab(ev.detail.index)}"
+                                      this._changeTab(ev.detail.index)}"
                               >
                                   <polr-tab label="Playing"></polr-tab>
                                   <polr-tab label="For You"></polr-tab>
                               </polr-tab-bar>
                           `
-                : nothing}
+                        : nothing}
                     ${this._renderTab()}
                 </div>
             </ha-card>
@@ -243,16 +243,16 @@ export class PoLRYTubePlayingCard extends LitElement {
         return html`
             <polr-ytube-playing
                 class="${this._activeTab == PoLRYTubeTab.CURRENTLY_PLAYING
-                ? "activeTab"
-                : "hiddenTab"}"
+                    ? "activeTab"
+                    : "hiddenTab"}"
                 id="playing"
                 ._hass=${this._hass}
                 ._entity=${this._entity}
             ></polr-ytube-playing>
             <polr-ytube-browser
                 class="${this._activeTab == PoLRYTubeTab.FOR_YOU
-                ? "activeTab"
-                : "hiddenTab"}"
+                    ? "activeTab"
+                    : "hiddenTab"}"
                 .hass=${this._hass}
                 .entity=${this._entity}
                 .initialAction=${this._config.initialAction}
