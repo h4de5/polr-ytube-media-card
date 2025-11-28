@@ -94,7 +94,7 @@ export class PoLRYTubePlayingCard extends LitElement {
                 </div>
                 <div class="content">
                     ${this._entity?.state != "off"
-                        ? html`
+                ? html`
                               <polr-media-control
                                   id="mediaControl"
                                   .hass=${this._hass}
@@ -104,13 +104,13 @@ export class PoLRYTubePlayingCard extends LitElement {
                               <polr-tab-bar
                                   activeIndex=${this._activeTab}
                                   @MDCTabBar:activated="${(ev) =>
-                                      this._changeTab(ev.detail.index)}"
+                        this._changeTab(ev.detail.index)}"
                               >
                                   <polr-tab label="Playing"></polr-tab>
                                   <polr-tab label="For You"></polr-tab>
                               </polr-tab-bar>
                           `
-                        : nothing}
+                : nothing}
                     ${this._renderTab()}
                 </div>
             </ha-card>
@@ -179,7 +179,7 @@ export class PoLRYTubePlayingCard extends LitElement {
     }
 
     _renderSourceSelctor() {
-        let media_players = [];
+        let media_players: [string, string][] = [];
 
         for (const [key, value] of Object.entries(this._hass["states"])) {
             if (key.startsWith("media_player")) {
@@ -189,6 +189,11 @@ export class PoLRYTubePlayingCard extends LitElement {
                 if (
                     "speakers" in this._config &&
                     !this._config.speakers.includes(key)
+                ) {
+                    continue;
+                }
+                if (
+                    value["state"] === "unavailable"
                 ) {
                     continue;
                 }
@@ -220,19 +225,15 @@ export class PoLRYTubePlayingCard extends LitElement {
                     naturalmenuwidth
                     fixed
                 >
-                    ${media_players.map((item) =>
-                        item[0] == this._entity?.attributes?.remote_player_id
-                            ? html`<mwc-list-item
-                                  selected
-                                  activated
-                                  value=${item[0]}
-                              >
-                                  ${item[1]}
-                              </mwc-list-item> `
-                            : html`<mwc-list-item value=${item[0]}
-                                  >${item[1]}</mwc-list-item
-                              > `
-                    )}
+                ${media_players.map(([key, friendly_name]) => {
+                        const isSelected = key === this._entity?.attributes?.remote_player_id;
+                        return html`<mwc-list-item
+                                ?selected=${isSelected}
+                                ?activated=${isSelected}
+                                value=${key}>
+                                    ${friendly_name ?? key}
+                                </mwc-list-item>`
+                    })}
                 </mwc-menu>
             </div>
         `;
@@ -242,16 +243,16 @@ export class PoLRYTubePlayingCard extends LitElement {
         return html`
             <polr-ytube-playing
                 class="${this._activeTab == PoLRYTubeTab.CURRENTLY_PLAYING
-                    ? "activeTab"
-                    : "hiddenTab"}"
+                ? "activeTab"
+                : "hiddenTab"}"
                 id="playing"
                 ._hass=${this._hass}
                 ._entity=${this._entity}
             ></polr-ytube-playing>
             <polr-ytube-browser
                 class="${this._activeTab == PoLRYTubeTab.FOR_YOU
-                    ? "activeTab"
-                    : "hiddenTab"}"
+                ? "activeTab"
+                : "hiddenTab"}"
                 .hass=${this._hass}
                 .entity=${this._entity}
                 .initialAction=${this._config.initialAction}
